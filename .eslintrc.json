@@ -1,0 +1,40 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": false,
+        "es2022": true,
+        "mocha": true,
+        "node": true
+    },
+    "plugins": [
+        "sonarjs"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:sonarjs/recommended"
+    ],
+    "overrides": [],
+    "parserOptions": {
+        "ecmaVersion": "latest",
+        "sourceType": "module"
+    },
+    "rules": {
+        "no-console": "off", // off, warn, error
+        "indent": [
+            "error",
+            4
+        ], // Optionen via Array
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "warn",
+            "double"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ]
+    }
+}

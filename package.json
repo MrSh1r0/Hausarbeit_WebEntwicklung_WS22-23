@@ -1,0 +1,49 @@
+{
+  "name": "hausarbeit_webentwicklung_ws22-23",
+  "version": "1.0.0",
+  "description": "Hausarbeit Web-Entwicklung WS22/23",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "clean": "npm run clean:dist && rm -rf node_modules",
+    "clean:dist": "rm -rf webapp/dist",
+    "lint": "semistandard --verbose webapp/src/js/**/*.mjs | snazzy && lesshint --reporter lesshint-reporter-stylish webapp/src/styles",
+    "format": "semistandard --verbose --fix webapp/src/js/**/*.mjs | snazzy",
+    "test": "mocha",
+    "debug": "npm run html && npm run css && npm run js",
+    "build": "npm run debug && npm run minify",
+    "html": "mkdir -p webapp/dist && cp webapp/src/index.html webapp/dist/index.html",
+    "css": "mkdir -p webapp/dist && lessc src/styles/style.less dist/style.css",
+    "js": "mkdir -p webapp/dist && esbuild webapp/src/js/Main.mjs --log-level=warning --bundle --outfile=webapp/dist/bundle.js",
+    "minify": "npm run minify:css && npm run minify:js",
+    "minify:css": "lessc --clean-css webapp/dist/style.css webapp/dist/style.css",
+    "minify:js": "terser webapp/dist/bundle.js --compress --mangle --comments=false -o webapp/dist/bundle.js",
+    "start": "http-server webapp/dist",
+    "predebug": "npm run lint && npm run clean:dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrSh1r0/Hausarbeit_WebEntwicklung_WS22-23.git"
+  },
+  "author": "thdx3393,trananh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrSh1r0/Hausarbeit_WebEntwicklung_WS22-23/issues"
+  },
+  "homepage": "https://github.com/MrSh1r0/Hausarbeit_WebEntwicklung_WS22-23#readme",
+  "devDependencies": {
+    "esbuild": "^0.16.7",
+    "eslint": "^8.29.0",
+    "eslint-plugin-sonarjs": "^0.17.0",
+    "less": "^4.1.3",
+    "less-plugin-clean-css": "^1.5.1",
+    "lesshint": "^6.3.7",
+    "lesshint-reporter-stylish": "^3.0.0",
+    "mocha": "^10.2.0",
+    "semistandard": "^16.0.1",
+    "snazzy": "^9.0.0",
+    "terser": "^5.16.1"
+  }
+}
