@@ -14,6 +14,7 @@
     "del": "^4.1.1",
     "esbuild": "^0.16.10",
     "eslint": "^7.32.0",
+    "eslint-plugin-sonarjs": "^0.17.0",
     "gulp": "^4.0.2",
     "gulp-babel": "^8.0.0",
     "gulp-cli": "^2.2.0",
@@ -24,6 +25,7 @@
     "gulp-load-plugins": "^1.6.0",
     "gulp-plumber": "^1.2.1",
     "gulp-postcss": "^8.0.0",
+    "gulp-semistandard": "^1.0.0",
     "gulp-size": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "gulp-useref": "^3.1.6",
@@ -31,7 +33,6 @@
     "less-plugin-clean-css": "^1.5.1",
     "lesshint": "^6.3.7",
     "mocha": "^6.2.3",
-    "semistandard": "^16.0.1",
     "snazzy": "^9.0.0",
     "terser": "^5.16.1",
     "yargs": "13.2.4"
@@ -44,8 +45,9 @@
     "test": "npm run serve:test",
     "tasks": "gulp --tasks",
     "clean": "gulp clean",
-    "debug":"gulp debug",
-    "lint":"gulp lint"
+    "lint": "gulp lint",
+    "debug": "gulp debug",
+    "semistandard": "gulp semistandard"
   },
   "browserslist": [
     "> 1%",
@@ -85,8 +87,5 @@
         "double"
       ]
     }
-  },
-  "dependencies": {
-    "eslint-plugin-sonarjs": "^0.17.0"
   }
 }

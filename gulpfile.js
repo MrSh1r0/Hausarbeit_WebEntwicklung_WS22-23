@@ -16,6 +16,9 @@ const isProd = process.env.NODE_ENV === 'production';
 const isTest = process.env.NODE_ENV === 'test';
 const isDev = !isProd && !isTest;
 
+const semistandard = require('gulp-semistandard');
+var reporter = require('lesshint-reporter-stylish');
+
 function styles() {
   return src('app/styles/*.css', {
     sourcemaps: !isProd,
@@ -180,9 +183,22 @@ if (isDev) {
   serve = series(build, startDistServer);
 }
 
+function html_noMinify() {
+  return src('app/*.html')
+    .pipe($.useref({searchPath: ['.tmp', 'app', '.']}))
+    .pipe(dest('dist'));
+}
+
+gulp.task('semistandard', function () {
+  return gulp.src(['app/*.js'])
+    .pipe(semistandard())
+    .pipe(semistandard.reporter(reporter));
+});
+
 exports.serve = serve;
 exports.build = build;
 exports.default = build;
 exports.clean = clean;
 exports.lint = lint;
-exports.debug = series(parallel(styles, scripts), html);
+exports.debug = series(parallel(styles, scripts), html_noMinify);
+exports.semistandard = semistandard;
