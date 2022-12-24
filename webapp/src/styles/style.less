@@ -1,0 +1,33 @@
+@main-background-color: #888888;
+@topbar-height: 50px;
+@sidebar-width: 300px;
+@font-size: 9pt;
+@font-color: #FFFFFF;
+
+main {
+    background-color: @main-background-color;
+    position: absolute;
+    left: @sidebar-width;
+    right: @sidebar-width;
+    top: @topbar-height;
+}
+
+.h {
+    //font-color: @font-color;
+    letter-spacing: 0.25em;
+    white-space: nowrap;
+    margin: 0;
+}
+
+h1 {
+    .h;
+    font-size: @font-size + 6;
+    font-weight: 400;
+    text-transform: uppercase;
+}
+
+h2 {
+    .h;
+    font-size: @font-size - 1;
+    font-weight: normal;
+}
