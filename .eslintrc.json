@@ -1,0 +1,34 @@
+{
+    "parserOptions": {
+        "ecmaVersion": 2015,
+        "sourceType": "module"
+    },
+    "env": {
+        "browser": true,
+        "commonjs": false,
+        "mocha": true,
+        "node": true
+    },
+    "plugins": [
+        "sonarjs"
+    ],
+    "extends": [
+        "eslint:recommended",
+        "plugin:sonarjs/recommended"
+    ],
+    "rules": {
+        "no-console": "off", // off, warn, error
+        "indent": [
+            "error",
+            4
+        ], // Optionen via Array
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "warn",
+            "double"
+        ]
+    }
+}
