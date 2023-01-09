@@ -20,7 +20,7 @@
     "minify": "npm run minify:css && npm run minify:js",
     "minify:css": "lessc --clean-css webapp/dist/style.css webapp/dist/style.css",
     "minify:js": "terser webapp/dist/bundle.js --compress --mangle --comments=false -o webapp/dist/bundle.js",
-    "start": "http-server webapp/dist -o",
+    "start": "node server/src/server.mjs",
     "predebug": "npm run lint && npm run clean:dist"
   },
   "repository": {

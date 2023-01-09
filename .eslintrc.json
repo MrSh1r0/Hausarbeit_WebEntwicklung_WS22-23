@@ -22,7 +22,7 @@
         "no-console": "off", // off, warn, error
         "indent": [
             "error",
-            4
+            2
         ], // Optionen via Array
         "linebreak-style": [
             "error",
