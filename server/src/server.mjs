@@ -1,57 +1,87 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { MongoClient } from 'mongodb';
+import path from 'path';
+import sqlite3 from 'sqlite3';
 
-const port = 8080;
+const server = express();
+const PORT = 8080;
+const db = new sqlite3.Database('database.db');
 
-// Create an instance of Express
-const app = express();
+// create a table to store the form data
+db.run('CREATE TABLE IF NOT EXISTS formData (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT)');
 
-const url = 'mongodb://localhost:27017';
-const dbName = 'test';
-const collectionName = 'data';
+server.use(bodyParser.json());
+server.use(express.static(path.join('webapp', 'dist')));
 
-// Connect to the MongoDB database
-MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log('Connected to database');
-  const db = client.db(dbName);
-  const collection = db.collection(collectionName);
+server.listen(PORT, () => {
+  console.log(`server at port ${PORT}`);
+});
 
-  // Set up the Express app to use the body-parser middleware
-  app.use(bodyParser.urlencoded({ extended: true }));
+server.get('/XXX', (request, response) => {
+  response.sendStatus(404);
+});
 
-  // Serve the static files from the public directory
-  app.use(express.static('public'));
+server.post('/submit-form', (request, response) => {
+  const { name, email, message } = request.body;
 
-  // Route to handle form submission
-  app.post('/submit', async (req, res) => {
-    try {
-      // Insert the data into the database
-      const result = await collection.insertOne(req.body);
-      res.json(result.ops[0]);
-    } catch (err) {
-      console.error(err);
-      res.sendStatus(500);
+  // insert the form data into the database
+  db.run('INSERT INTO formData (name, email, message) VALUES (?, ?, ?)', [name, email, message], (error) => {
+    if (error) {
+      console.error(error);
+      response.status(500).json({ error: 'Internal Server Error' });
+    } else {
+      response.json({ message: 'Form submitted successfully' });
     }
   });
+});
 
-  // Route to retrieve the data from the database
-  app.get('/data', async (req, res) => {
-    try {
-      // Retrieve the data from the database and return it as JSON
-      const cursor = collection.find();
-      const data = await cursor.toArray();
-      res.json(data);
-    } catch (err) {
-      console.error(err);
-      res.sendStatus(500);
+server.get('/formData', (request, response) => {
+  const sql = 'SELECT * FROM formData';
+
+  db.all(sql, [], (error, rows) => {
+    if (error) {
+      console.error(error);
+      response.sendStatus(500);
+    } else {
+      const tableRows = rows.map(row => `
+        <tr>
+          <td>${row.name}</td>
+          <td>${row.email}</td>
+          <td>${row.message}</td>
+        </tr>
+      `).join('');
+
+      const html = `
+        <html>
+          <head>
+            <title>Submissions</title>
+          </head>
+          <body>
+            <table>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${tableRows}
+              </tbody>
+            </table>
+          </body>
+        </html>
+      `;
+
+      response.send(html);
     }
   });
+});
 
-  // Start the server
-  app.listen(port, () => console.log('Server started on port 8080'));
+// close the database connection when the server is stopped
+process.on('SIGINT', () => {
+  db.close(() => {
+    console.log('Database connection closed');
+    process.exit(0);
+  });
 });

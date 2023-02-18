@@ -45,11 +45,12 @@
     "lesshint": "^6.3.7",
     "lesshint-reporter-stylish": "^3.0.0",
     "mocha": "^10.2.0",
-    "mongodb": "^5.0.1",
-    "mongoose": "^6.9.2",
     "node-json-db": "^2.1.4",
     "semistandard": "^16.0.1",
     "snazzy": "^9.0.0",
     "terser": "^5.16.1"
+  },
+  "dependencies": {
+    "sqlite3": "^5.1.4"
   }
 }
