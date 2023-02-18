@@ -1,67 +1,57 @@
-// import { createServer } from "http";
-// import { promises as fs } from "fs";
-
-// const host = "localhost";
-const port = 8080;
-
-/* const requestListener = function (req, res) {
-  fs.readFile("webapp/dist/index.html")
-    .then(contents => {
-      res.setHeader("Content-Type", "text/html");
-      res.writeHead(200);
-      res.end(contents);
-    })
-    .catch(err => {
-      res.writeHead(500);
-      res.end(err);
-    });
-};
-
-const server = createServer(requestListener);
-server.listen(port, host, () => {
-  console.log(`Server is running on http://${host}:${port}`);
-}); */
-
-// Import Express and node-json-db
-/* const express = require('express');
-const JsonDB = require('node-json-db').JsonDB;
-const Config = require('node-json-db/dist/lib/JsonDBConfig').Config; */
 import express from 'express';
-import { JsonDB } from 'node-json-db';
-import { Config } from 'node-json-db/dist/lib/JsonDBConfig.js';
+import bodyParser from 'body-parser';
+import { MongoClient } from 'mongodb';
 
+const port = 8080;
 
 // Create an instance of Express
 const app = express();
 
-// Create an instance of node-json-db
-const db = new JsonDB(new Config('myDatabase', true, false, '/'));
+const url = 'mongodb://localhost:27017';
+const dbName = 'test';
+const collectionName = 'data';
 
-// Use Express middleware to parse JSON data from requests
-app.use(express.json());
+// Connect to the MongoDB database
+MongoClient.connect(url, { useNewUrlParser: true, useUnifiedTopology: true }, (err, client) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log('Connected to database');
+  const db = client.db(dbName);
+  const collection = db.collection(collectionName);
 
-// Create a route for GET requests to /
-app.get('/', (req, res) => {
-  // Read data from the database
-  const data = db.getData('/');
+  // Set up the Express app to use the body-parser middleware
+  app.use(bodyParser.urlencoded({ extended: true }));
 
-  // Send data as JSON
-  res.json(data);
-});
+  // Serve the static files from the public directory
+  app.use(express.static('public'));
 
-// Create a route for POST requests to /submit
-app.post('/submit', (req, res) => {
-  // Get data from the request body
-  const formData = req.body;
+  // Route to handle form submission
+  app.post('/submit', async (req, res) => {
+    try {
+      // Insert the data into the database
+      const result = await collection.insertOne(req.body);
+      res.json(result.ops[0]);
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  });
 
-  // Save data to the database
-  db.push('/formData[]', formData);
+  // Route to retrieve the data from the database
+  app.get('/data', async (req, res) => {
+    try {
+      // Retrieve the data from the database and return it as JSON
+      const cursor = collection.find();
+      const data = await cursor.toArray();
+      res.json(data);
+    } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+    }
+  });
 
-  // Send a response
-  res.send('Data saved!');
-});
-
-// Start the server
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  // Start the server
+  app.listen(port, () => console.log('Server started on port 8080'));
 });

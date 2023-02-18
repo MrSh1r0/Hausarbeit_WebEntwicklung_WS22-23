@@ -1,29 +1,49 @@
-// Get the table element by id
+const form = document.getElementById('input-form');
 const table = document.getElementById('data-table');
 
-// Fetch data from /
-fetch('/')
-  .then(response => response.json()) // Parse response as JSON
-  .then(data => {
-    // Loop through each item in data.formData array
-    for (const item of data.formData) {
-      // Create a new table row element
-      const row = document.createElement('tr');
+async function submitData (event) {
+  event.preventDefault();
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const response = await fetch('/submit', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `name=${encodeURIComponent(name)}&email=${encodeURIComponent(email)}`
+  });
+  if (response.ok) {
+    console.log('Data saved');
+    fetchData();
+    form.reset();
+  } else {
+    console.error(`Error saving data: ${response.status} ${response.statusText}`);
+  }
+}
 
-      // Create two new table cell elements for name and email fields
-      const nameCell = document.createElement('td');
-      const emailCell = document.createElement('td');
+async function fetchData () {
+  const response = await fetch('/data');
+  if (response.ok) {
+    const data = await response.json();
+    table.innerHTML = `
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${data.map(item => `
+          <tr>
+            <td>${item.name}</td>
+            <td>${item.email}</td>
+          </tr>
+        `).join('')}
+      </tbody>
+    `;
+  } else {
+    console.error(`Error fetching data: ${response.status} ${response.statusText}`);
+  }
+}
 
-      // Set their text content to item.name and item.email values
-      nameCell.textContent = item.name;
-      emailCell.textContent = item.email;
+form.addEventListener('submit', submitData);
 
-      // Append them to the row element
-      row.appendChild(nameCell);
-      row.appendChild(emailCell);
-
-      // Append the row element to the table body element
-      table.tBodies[0].appendChild(row);
-    }
-  })
-  .catch(error => console.error(error)); // Handle errors
+fetchData();
