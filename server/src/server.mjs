@@ -17,65 +17,77 @@ server.listen(PORT, () => {
   console.log(`server at port ${PORT}`);
 });
 
-server.get('/XXX', (request, response) => {
+server.get('/XXX', async (request, response) => {
   response.sendStatus(404);
 });
 
-server.post('/submit-form', (request, response) => {
+server.post('/submit-form', async (request, response) => {
   const { name, email, message } = request.body;
 
-  // insert the form data into the database
-  db.run('INSERT INTO formData (name, email, message) VALUES (?, ?, ?)', [name, email, message], (error) => {
-    if (error) {
-      console.error(error);
-      response.status(500).json({ error: 'Internal Server Error' });
-    } else {
-      response.json({ message: 'Form submitted successfully' });
-    }
-  });
+  try {
+    await new Promise((resolve, reject) => {
+      db.run('INSERT INTO formData (name, email, message) VALUES (?, ?, ?)', [name, email, message], (error) => {
+        if (error) {
+          console.error(error);
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
+    response.json({ message: 'Form submitted successfully' });
+  } catch (error) {
+    response.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
-server.get('/formData', (request, response) => {
+server.get('/formData', async (request, response) => {
   const sql = 'SELECT * FROM formData';
 
-  db.all(sql, [], (error, rows) => {
-    if (error) {
-      console.error(error);
-      response.sendStatus(500);
-    } else {
-      const tableRows = rows.map(row => `
-        <tr>
-          <td>${row.name}</td>
-          <td>${row.email}</td>
-          <td>${row.message}</td>
-        </tr>
-      `).join('');
+  try {
+    const rows = await new Promise((resolve, reject) => {
+      db.all(sql, [], (error, rows) => {
+        if (error) {
+          console.error(error);
+          reject(error);
+        } else {
+          resolve(rows);
+        }
+      });
+    });
+    const tableRows = rows.map(row => `
+      <tr>
+        <td>${row.name}</td>
+        <td>${row.email}</td>
+        <td>${row.message}</td>
+      </tr>
+    `).join('');
 
-      const html = `
-        <html>
-          <head>
-            <title>Submissions</title>
-          </head>
-          <body>
-            <table>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Message</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${tableRows}
-              </tbody>
-            </table>
-          </body>
-        </html>
-      `;
-
-      response.send(html);
-    }
-  });
+    const html = `
+      <html>
+        <head>
+          <title>Submissions</title>
+        </head>
+        <body>
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Message</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${tableRows}
+            </tbody>
+          </table>
+        </body>
+      </html>
+    `;
+    response.send(html);
+  } catch (error) {
+    response.sendStatus(500);
+  }
 });
 
 // close the database connection when the server is stopped
