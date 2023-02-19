@@ -143,7 +143,7 @@ server.get('/events/:id/guests/:guest_id', async (request, response) => {
 
   try {
     const rows = await new Promise((resolve, reject) => {
-      db.all('SELECT * FROM seating_plans WHERE eventID = ?', [guest_id,  id], (error, rows) => {
+      db.all('SELECT * FROM seating_plans WHERE eventID = ?', [guest_id, id], (error, rows) => {
         if (error) {
           console.error(error);
           reject(error);
