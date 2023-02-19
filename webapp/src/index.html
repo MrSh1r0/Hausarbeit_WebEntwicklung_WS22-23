@@ -10,60 +10,21 @@
 </head>
 
 <body>
-  <h1>Event Planner</h1>
+    <h1>Submit Form</h1>
+    <form id="form">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
 
-  <div id="events-list">
-    <h2>Events</h2>
-    <button id="create-event-button">Create Event</button>
-    <ul id="events"></ul>
-  </div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
 
-  <div id="create-event-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Create Event</h2>
-      <label for="event-name-input">Event Name:</label>
-      <input id="event-name-input" type="text" required>
-      <label for="event-date-input">Event Date:</label>
-      <input id="event-date-input" type="datetime-local" required>
-      <button id="create-event-form-submit">Create</button>
-      <p id="create-event-error-message" class="error-message"></p>
-    </div>
-  </div>
+      <label for="message">Message:</label>
+      <textarea id="message" name="message" required></textarea>
 
-  <div id="event-detail" style="display: none;">
-    <h2 id="event-detail-name"></h2>
-    <p id="event-detail-date"></p>
-    <div id="guest-list">
-      <h3>Guest List</h3>
-      <button id="add-guest-button">Add Guest</button>
-      <table id="guest-list-table"></table>
-    </div>
-    <div id="seating-plan">
-      <h3>Seating Plan</h3>
-      <label for="num-tables-input">Number of Tables:</label>
-      <input id="num-tables-input" type="number" required>
-      <label for="seats-per-table-input">Seats per Table:</label>
-      <input id="seats-per-table-input" type="number" required>
-      <label for="is-two-sided-input">Is Two-Sided:</label>
-      <input id="is-two-sided-input" type="checkbox">
-      <button id="create-seating-plan-button">Create Seating Plan</button>
-      <table id="seating-plan-table"></table>
-    </div>
-  </div>
-
-  <div id="add-guest-modal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>Add Guest</h2>
-      <label for="guest-name-input">Name:</label>
-      <input id="guest-name-input" type="text" required>
-      <label for="is-child-input">Is Child:</label>
-      <input id="is-child-input" type="checkbox">
-      <button id="add-guest-form-submit">Add</button>
-      <p id="add-guest-error-message" class="error-message"></p>
-    </div>
-  </div>
+      <button type="submit">Submit</button>
+    </form>
+    
+    <div id="status"></div>
 </body>
 
 </html>
