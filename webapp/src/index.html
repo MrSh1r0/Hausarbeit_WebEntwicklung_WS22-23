@@ -2,29 +2,57 @@
 <html lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Hausarbeit Web-Entwicklung WS22/23</title>
-    <link rel="stylesheet" href="style.css" />
-    <script defer src="bundle.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hausarbeit Web-Entwicklung WS22/23</title>
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="bundle.js"></script>
 </head>
 
 <body>
-    <h1>Submit Form</h1>
-    <form id="form">
-      <label for="name">Name:</label>
-      <input type="text" id="name" name="name" required>
+  <h1>Submit Form</h1>
+  <form id="eventForm">
+    <label for="eventNameInput">Name:</label>
+    <input type="text" id="eventNameInput" name="eventName" required>
+    <label for="eventDateTimeInput">Date and Time:</label>
+    <input type="datetime-local" id="eventDateTimeInput" name="eventDateTimee" required>
+  </form>
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" name="email" required>
+  <h1>Guest list</h1>
+  <form id="guestForm">
+    <label for="guestNameInput">Name:</label>
+    <input type="text" id="guestNameInput" name="guestName" required>
+    <label for="isChildInput">Is Child:</label>
+    <select id="isChildInput" name="isChild">
+      <option value="yes">yes</option>
+      <option value="no">no</option>
+    </select>
+    <label for="invitaionStatusInput">Invitaion status:</label>
+    <select id="invitaionStatusInput" name="invitaionStatus">
+      <option value="unknown">unknown</option>
+      <option value="invited">invited</option>
+      <option value="accepted">accepted</option>
+      <option value="rejected">rejected</option>
+    </select>
+    <button type="submit">Add guest</button>
+    <button type="submit">Remove guest</button>
+  </form>
+  <div id="guestListTable"></div>
 
-      <label for="message">Message:</label>
-      <textarea id="message" name="message" required></textarea>
-
-      <button type="submit">Submit</button>
-    </form>
-    
-    <div id="status"></div>
+  <h1>Seating plan</h1>
+  <form id="tableForm">
+    <label for="tableNumberInput">Name:</label>
+    <input type="number" id="tableNumberInput" name="number" required>
+    <label for="seatsNumberPerTableInput">Name:</label>
+    <input type="number" id="seatsPerTableInput" name="number" required>
+    <label for="isTwoSidedInput">Choose a car:</label>
+    <select id="isTwoSidedInput" name="isTwoSided">
+      <option value="one">One sided</option>
+      <option value="two">Two sided</option>
+    </select>
+  </form>
+  <button type="submit">create Event</button>
+  <div id="status"></div>
 </body>
 
 </html>

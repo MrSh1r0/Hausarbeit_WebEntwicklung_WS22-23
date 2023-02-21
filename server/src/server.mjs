@@ -5,10 +5,21 @@ import sqlite3 from 'sqlite3';
 
 const server = express();
 const PORT = 8080;
-const db = new sqlite3.Database('database.db');
+const db = new sqlite3.Database('database.db', (error) => {
+  if (error) {
+    console.error(error.message);
+  }
+  console.log('Connected to the events database.');
+});
 
-// create a table to store the form data
-db.run('CREATE TABLE IF NOT EXISTS formData (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, email TEXT, message TEXT)');
+// Define the schema for the events table
+db.run('CREATE TABLE IF NOT EXISTS events (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, dateTime TEXT)');
+
+// Define the schema for the guests table
+db.run('CREATE TABLE IF NOT EXISTS guests (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, isChild INTEGER, invitationStatus TEXT, eventID INTEGER, FOREIGN KEY(eventID) REFERENCES events(id))');
+
+// Define the schema for the seating plans table
+db.run('CREATE TABLE IF NOT EXISTS seating_plans (tablesNumber INTEGER, seatsPerTable INTEGER, isTwoSided INTEGER, eventID INTEGER, FOREIGN KEY(eventID) REFERENCES events(id))');
 
 server.use(bodyParser.json());
 server.use(express.static(path.join('webapp', 'dist')));
@@ -23,12 +34,12 @@ server.get('/XXX', async (request, response) => {
 });
 
 
-server.post('/submit-form', async (request, response) => {
-  const { name, email, message } = request.body;
+server.post('/event', async (request, response) => {
+  const { name, dateTime } = request.body;
 
   try {
     await new Promise((resolve, reject) => {
-      db.run('INSERT INTO formData (name, email, message) VALUES (?, ?, ?)', [name, email, message], (error) => {
+      db.run('INSERT INTO formData (name, dateTime) VALUES (?, ?)', [name, dateTime], (error) => {
         if (error) {
           console.error(error);
           reject(error);
@@ -37,14 +48,14 @@ server.post('/submit-form', async (request, response) => {
         }
       });
     });
-    response.json({ message: 'Form submitted successfully' });
+    response.json({ message: 'Event created successfully' });
   } catch (error) {
     response.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-server.get('/formData', async (request, response) => {
-  const sql = 'SELECT * FROM formData';
+server.get('/events', async (request, response) => {
+  const sql = 'SELECT * FROM events';
 
   try {
     const rows = await new Promise((resolve, reject) => {
@@ -94,7 +105,7 @@ server.get('/formData', async (request, response) => {
   }
 });
 
-server.get('/formData/:id', async (request, response) => {
+server.get('/event/:id', async (request, response) => {
   const { id } = request.params;
   const sql = 'SELECT * FROM formData WHERE id = ?';
 
