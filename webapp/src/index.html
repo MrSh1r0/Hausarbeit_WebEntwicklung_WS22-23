@@ -15,8 +15,16 @@
     <label for="eventNameInput">Name:</label>
     <input type="text" id="eventNameInput" name="eventName" required>
     <label for="eventDateTimeInput">Date and Time:</label>
-    <input type="datetime-local" id="eventDateTimeInput" name="eventDateTimee" required>
+    <input type="datetime-local" id="eventDateTimeInput" name="eventDateTime" required>
+    <button>create Event</button>
   </form>
+
+  <form id="eventSreach">
+    <label for="eventIDInput">Event's ID:</label>
+    <input type="number" id="eventIDInput" name="eventID">
+    <button type="submit">find Event</button>
+  </form>
+  <div id="event"></div>
 
   <h1>Guest list</h1>
   <form id="guestForm">
@@ -35,23 +43,50 @@
       <option value="rejected">rejected</option>
     </select>
     <button type="submit">Add guest</button>
-    <button type="submit">Remove guest</button>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Child?</th>
+          <th>Invitaion status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+
+      </tbody>
+  </table>
   </form>
-  <div id="guestListTable"></div>
+  <div id="guestList"></div>
 
   <h1>Seating plan</h1>
   <form id="tableForm">
-    <label for="tableNumberInput">Name:</label>
-    <input type="number" id="tableNumberInput" name="number" required>
-    <label for="seatsNumberPerTableInput">Name:</label>
-    <input type="number" id="seatsPerTableInput" name="number" required>
-    <label for="isTwoSidedInput">Choose a car:</label>
+    <label for="tableNumberInput">Number of Table:</label>
+    <input type="number" id="tableNumberInput" name="tableNumber" required>
+    <label for="seatsNumberPerTableInput">Seats per Table:</label>
+    <input type="number" id="seatsPerTableInput" name="seatsPerTable" required>
+    <label for="isTwoSidedInput">Single or Double side:</label>
     <select id="isTwoSidedInput" name="isTwoSided">
       <option value="one">One sided</option>
       <option value="two">Two sided</option>
     </select>
   </form>
-  <button type="submit">create Event</button>
+  <button type="submit">create Seating plan</button>
+  <table>
+    <thead>
+      <tr>
+        <th>Table</th>
+        <th>Seats per Table</th>
+        <th>One or Two sided</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+</table>
+  <div id="seatPlan"></div>
+
   <div id="status"></div>
 </body>
 
